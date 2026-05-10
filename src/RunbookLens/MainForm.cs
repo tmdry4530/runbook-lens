@@ -21,7 +21,7 @@ public sealed class MainForm : Form
 
     public MainForm()
     {
-        Text = "Runbook Lens - local log triage workspace";
+        Text = "Runbook Lens - 로컬 로그 점검 워크스페이스";
         Width = 1180;
         Height = 760;
         MinimumSize = new Size(980, 620);
@@ -49,17 +49,17 @@ public sealed class MainForm : Form
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 24));
         root.Controls.Add(left, 0, 0);
 
-        var browse = new Button { Text = "Choose log folder/file", Dock = DockStyle.Fill };
+        var browse = new Button { Text = "로그 폴더/파일 선택", Dock = DockStyle.Fill };
         browse.Click += (_, _) => ChoosePath();
         left.Controls.Add(browse, 0, 0);
-        _pathBox.PlaceholderText = "C:\\logs or single .log file";
+        _pathBox.PlaceholderText = "C:\\logs 또는 단일 로그 파일";
         _pathBox.Dock = DockStyle.Fill;
         left.Controls.Add(_pathBox, 0, 1);
 
         _rulesList.Dock = DockStyle.Fill;
-        left.Controls.Add(Group("Signal rules", _rulesList), 0, 2);
+        left.Controls.Add(Group("점검 규칙", _rulesList), 0, 2);
 
-        var scan = new Button { Text = "Scan locally", Dock = DockStyle.Fill };
+        var scan = new Button { Text = "로컬 스캔 시작", Dock = DockStyle.Fill };
         scan.Click += async (_, _) => await ScanAsync();
         left.Controls.Add(scan, 0, 3);
 
@@ -67,29 +67,29 @@ public sealed class MainForm : Form
         _maxFiles.Maximum = 5000;
         _maxFiles.Value = 500;
         _maxFiles.Dock = DockStyle.Fill;
-        left.Controls.Add(Group("Max files", _maxFiles), 0, 4);
+        left.Controls.Add(Group("최대 파일 수", _maxFiles), 0, 4);
 
         _checklist.Items.AddRange(new object[]
         {
-            "1. Identify first critical/high signal",
-            "2. Confirm impacted file/time window",
-            "3. Capture evidence into brief",
-            "4. Add operator hypothesis",
-            "5. Export markdown for handoff"
+            "1. 심각/높음 신호 먼저 확인",
+            "2. 영향 파일/시간대 확인",
+            "3. 핵심 증거를 보고서에 반영",
+            "4. 원인 가설/조치 메모 작성",
+            "5. 인수인계용 Markdown 내보내기"
         });
         _checklist.Dock = DockStyle.Fill;
-        left.Controls.Add(Group("Triage checklist", _checklist), 0, 5);
+        left.Controls.Add(Group("점검 체크리스트", _checklist), 0, 5);
 
         _notesBox.Multiline = true;
         _notesBox.ScrollBars = ScrollBars.Vertical;
         _notesBox.Dock = DockStyle.Fill;
-        _notesBox.PlaceholderText = "Operator notes, hypothesis, next actions...";
-        left.Controls.Add(Group("Incident notes", _notesBox), 0, 6);
+        _notesBox.PlaceholderText = "운영 메모, 원인 가설, 다음 조치...";
+        left.Controls.Add(Group("사고/이슈 메모", _notesBox), 0, 6);
 
-        var export = new Button { Text = "Export incident brief", Dock = DockStyle.Fill };
+        var export = new Button { Text = "점검 보고서 내보내기", Dock = DockStyle.Fill };
         export.Click += (_, _) => ExportBrief();
         left.Controls.Add(export, 0, 7);
-        _status.Text = "Ready. No network, no secrets, local files only.";
+        _status.Text = "준비됨. 네트워크 전송 없음 · 시크릿 저장 없음 · 로컬 파일만 사용.";
         _status.Dock = DockStyle.Fill;
         left.Controls.Add(_status, 0, 8);
 
@@ -99,7 +99,7 @@ public sealed class MainForm : Form
         right.RowStyles.Add(new RowStyle(SizeType.Absolute, 92));
         root.Controls.Add(right, 1, 0);
 
-        _searchBox.PlaceholderText = "Filter hits by text, severity, rule, file...";
+        _searchBox.PlaceholderText = "텍스트, 심각도, 규칙, 파일명으로 결과 필터...";
         _searchBox.Dock = DockStyle.Fill;
         _searchBox.TextChanged += (_, _) => ApplyFilter();
         right.Controls.Add(_searchBox, 0, 0);
@@ -117,8 +117,8 @@ public sealed class MainForm : Form
             Multiline = true,
             ReadOnly = true,
             Dock = DockStyle.Fill,
-            Text = "MVP workflow: pick a log folder → choose risk rules → scan → filter high-signal rows → add notes → export a Markdown incident brief. " +
-                   "Designed for SMB operators, support desks, and solo developers who need a local-first triage tool without SaaS upload risk."
+            Text = "사용 흐름: 로그 폴더/파일 선택 → 점검 규칙 선택 → 스캔 → 위험 신호 필터링 → 메모 작성 → Markdown/JSON 보고서 내보내기. " +
+                   "SaaS 업로드 없이 로컬에서만 운영 증거를 확인해야 하는 운영자, 지원팀, 개발자를 위한 도구입니다."
         };
         right.Controls.Add(help, 0, 2);
     }
@@ -140,14 +140,14 @@ public sealed class MainForm : Form
     {
         var choice = MessageBox.Show(
             this,
-            "Choose Yes for a folder, No for a single log file, or Cancel to keep the current path.",
+            "폴더를 선택하려면 [예], 단일 로그 파일을 선택하려면 [아니요], 현재 경로를 유지하려면 [취소]를 누르세요.",
             "Runbook Lens",
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
         if (choice == DialogResult.Yes)
         {
-            using var folderDialog = new FolderBrowserDialog { Description = "Choose folder containing logs" };
+            using var folderDialog = new FolderBrowserDialog { Description = "로그가 들어있는 폴더 선택" };
             if (folderDialog.ShowDialog(this) == DialogResult.OK) _pathBox.Text = folderDialog.SelectedPath;
             return;
         }
@@ -156,8 +156,8 @@ public sealed class MainForm : Form
         {
             using var fileDialog = new OpenFileDialog
             {
-                Title = "Choose a log or text file",
-                Filter = "Log and text files|*.log;*.txt;*.json;*.csv;*.md;*.out;*.trace|All files|*.*",
+                Title = "로그/텍스트 파일 선택",
+                Filter = "로그/텍스트 파일|*.log;*.txt;*.json;*.csv;*.md;*.out;*.trace|모든 파일|*.*",
                 CheckFileExists = true,
                 Multiselect = false
             };
@@ -169,33 +169,33 @@ public sealed class MainForm : Form
     {
         if (string.IsNullOrWhiteSpace(_pathBox.Text) || (!Directory.Exists(_pathBox.Text) && !File.Exists(_pathBox.Text)))
         {
-            MessageBox.Show(this, "Choose an existing folder or file first.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(this, "먼저 존재하는 폴더 또는 파일을 선택하세요.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
         var rules = _rulesList.CheckedItems.Cast<SignalRule>().ToList();
         if (rules.Count == 0)
         {
-            MessageBox.Show(this, "Select at least one signal rule.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(this, "점검 규칙을 하나 이상 선택하세요.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
         try
         {
             _scanCancellation?.Cancel();
             _scanCancellation = new CancellationTokenSource();
-            _status.Text = "Scanning...";
+            _status.Text = "스캔 중...";
             Cursor = Cursors.WaitCursor;
             _lastSummary = await _scanner.ScanAsync(_pathBox.Text, rules, (int)_maxFiles.Value, _scanCancellation.Token);
             ApplyFilter();
-            _status.Text = $"Done: {_lastSummary.FilesScanned} files, {_lastSummary.LinesScanned} lines, {_lastSummary.Hits.Count} hits.";
+            _status.Text = $"완료: {_lastSummary.FilesScanned}개 파일, {_lastSummary.LinesScanned}줄, {_lastSummary.Hits.Count}개 결과.";
         }
         catch (OperationCanceledException)
         {
-            _status.Text = "Scan cancelled.";
+            _status.Text = "스캔이 취소되었습니다.";
         }
         catch (Exception ex)
         {
-            _status.Text = "Scan failed.";
-            MessageBox.Show(this, ex.Message, "Runbook Lens scan error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _status.Text = "스캔 실패.";
+            MessageBox.Show(this, ex.Message, "Runbook Lens 스캔 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
@@ -222,12 +222,12 @@ public sealed class MainForm : Form
     {
         if (_lastSummary.Hits.Count == 0)
         {
-            MessageBox.Show(this, "Scan first; there are no hits to export.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "먼저 스캔하세요. 내보낼 결과가 없습니다.", "Runbook Lens", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
         using var dialog = new SaveFileDialog
         {
-            Filter = "Markdown brief (*.md)|*.md|JSON session (*.json)|*.json",
+            Filter = "Markdown 보고서 (*.md)|*.md|JSON 세션 (*.json)|*.json",
             FileName = $"runbook-lens-brief-{DateTime.Now:yyyyMMdd-HHmm}.md"
         };
         if (dialog.ShowDialog(this) != DialogResult.OK) return;
@@ -241,12 +241,12 @@ public sealed class MainForm : Form
             var output = dialog.FileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
                 ? _exporter.SaveSession(dialog.FileName, _lastSummary)
                 : _exporter.ExportMarkdown(dialog.FileName, _lastSummary, selected, _notesBox.Text);
-            _status.Text = "Exported: " + output;
+            _status.Text = "내보내기 완료: " + output;
         }
         catch (Exception ex)
         {
-            _status.Text = "Export failed.";
-            MessageBox.Show(this, ex.Message, "Runbook Lens export error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _status.Text = "내보내기 실패.";
+            MessageBox.Show(this, ex.Message, "Runbook Lens 내보내기 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
