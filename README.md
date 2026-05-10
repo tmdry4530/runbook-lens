@@ -79,7 +79,6 @@ README.md
 docs/DESIGN.md
 scripts/verify-windows.ps1
 samples/demo.txt
-.github/workflows/windows-ci.yml
 ```
 
 ## Safety/privacy
