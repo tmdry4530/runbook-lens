@@ -1,0 +1,23 @@
+# Build output
+bin/
+obj/
+artifacts/
+TestResults/
+.vs/
+.vscode/
+
+# User/local files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and exported sessions
+*.log
+*.trace
+runbook-lens-brief-*.md
+runbook-lens-session-*.json
+
+# OS
+.DS_Store
+Thumbs.db
