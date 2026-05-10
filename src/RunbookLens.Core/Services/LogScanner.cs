@@ -14,17 +14,22 @@ public sealed class LogScanner
         new("인증/권한 문제", "unauthorized|forbidden|permission denied|401|403|invalid token", "높음", "로그인 및 접근 제어 실패"),
         new("데이터 손실 위험", "corrupt|failed to write|disk full|out of space|cannot save", "심각", "저장소 및 로컬 데이터 안전성 문제"),
         new("결제/주문 위험", "payment failed|refund|chargeback|order failed|invoice", "높음", "소규모 비즈니스 매출 흐름 위험"),
-        new("일반 오류", "\berror\b|\bfail(?:ed|ure)?\b|fatal", "중간", "광범위한 오류/실패 문구")
+        new("일반 오류", "error|fail(?:ed|ure)?|fatal", "중간", "광범위한 오류/실패 문구")
     };
 
-    public async Task<ScanSummary> ScanAsync(string rootPath, IEnumerable<SignalRule> rules, int maxFiles, CancellationToken cancellationToken)
+    public Task<ScanSummary> ScanAsync(string rootPath, IEnumerable<SignalRule> rules, int maxFiles, CancellationToken cancellationToken)
+    {
+        return ScanAsync(rootPath, rules, ScanOptions.Default with { MaxFiles = maxFiles }, cancellationToken);
+    }
+
+    public async Task<ScanSummary> ScanAsync(string rootPath, IEnumerable<SignalRule> rules, ScanOptions options, CancellationToken cancellationToken)
     {
         var started = DateTimeOffset.Now;
         var compiledRules = rules
             .Select(rule => (Rule: rule, Regex: new Regex(rule.Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant)))
             .ToList();
-        var files = EnumerateCandidateFiles(rootPath).Take(Math.Max(1, maxFiles)).ToList();
-        var summary = new ScanSummary { FilesScanned = files.Count };
+        var files = EnumerateCandidateFiles(rootPath).Take(Math.Max(1, options.MaxFiles)).ToList();
+        var summary = new ScanSummary();
 
         foreach (var file in files)
         {
@@ -32,6 +37,14 @@ public sealed class LogScanner
             int lineNo = 0;
             try
             {
+                var fileSize = new FileInfo(file).Length;
+                if (options.MaxFileBytes > 0 && fileSize > options.MaxFileBytes)
+                {
+                    summary.SkippedFiles.Add(new SkippedFile(file, $"파일 크기 제한 초과 ({fileSize:N0} bytes)"));
+                    continue;
+                }
+
+                summary.FilesScanned++;
                 using var stream = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
                 while (!reader.EndOfStream)
@@ -69,7 +82,7 @@ public sealed class LogScanner
         {
             RecurseSubdirectories = true,
             IgnoreInaccessible = true,
-            AttributesToSkip = FileAttributes.System | FileAttributes.Temporary
+            AttributesToSkip = FileAttributes.System
         };
         return Directory.EnumerateFiles(rootPath, "*.*", options)
             .Where(path => DefaultExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))

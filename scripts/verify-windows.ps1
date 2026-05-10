@@ -10,6 +10,7 @@ dotnet --info
 
 dotnet restore $solution
 dotnet build $solution -c Release --no-restore
+dotnet test (Join-Path $repoRoot 'tests/RunbookLens.Tests/RunbookLens.Tests.csproj') -c Release --no-restore
 dotnet publish $project -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o $publishDir
 
 $exe = Join-Path $publishDir 'RunbookLens.exe'

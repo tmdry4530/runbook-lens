@@ -23,6 +23,8 @@ Runbook Lens는 고객/시스템 로그를 SaaS에 업로드하지 않고 로컬
 - 운영 사고용 기본 regex 규칙팩
 - 심각도, 규칙, 파일 경로, 라인 번호, 미리보기, 타임스탬프 추출 결과 그리드
 - 텍스트/심각도/규칙/파일명 필터
+- 파일당 최대 크기 제한으로 대용량 로그 스캔 사고 방지
+- 심각도별 집계와 제외 파일 수를 스캔 완료 상태/보고서에 표시
 - 점검 체크리스트와 운영 메모 패널
 - Markdown 보고서 및 JSON 세션 내보내기
 - 외부 유료 API, 로그인, 외부 발송, credential 저장 없음
@@ -72,11 +74,13 @@ dotnet publish src/RunbookLens/RunbookLens.csproj -c Release -r win-x64 --self-c
 ```text
 RunbookLens.sln
 src/RunbookLens/RunbookLens.csproj
+src/RunbookLens.Core/RunbookLens.Core.csproj
 src/RunbookLens/Program.cs
 src/RunbookLens/MainForm.cs
-src/RunbookLens/Models/DomainModels.cs
-src/RunbookLens/Services/LogScanner.cs
-src/RunbookLens/Services/ReportExporter.cs
+src/RunbookLens.Core/Models/DomainModels.cs
+src/RunbookLens.Core/Services/LogScanner.cs
+src/RunbookLens.Core/Services/ReportExporter.cs
+tests/RunbookLens.Tests/RunbookLens.Tests.csproj
 README.md
 docs/DESIGN.md
 scripts/verify-windows.ps1

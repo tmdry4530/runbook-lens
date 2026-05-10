@@ -10,4 +10,7 @@
     <AssemblyName>RunbookLens</AssemblyName>
     <RootNamespace>RunbookLens</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../RunbookLens.Core/RunbookLens.Core.csproj" />
+  </ItemGroup>
 </Project>

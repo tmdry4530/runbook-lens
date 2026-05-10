@@ -14,6 +14,7 @@ public sealed class ReportExporter
         sb.AppendLine();
         sb.AppendLine($"생성 시각: {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}");
         sb.AppendLine($"스캔 파일 수: {summary.FilesScanned}");
+        sb.AppendLine($"제외 파일 수: {summary.FilesSkipped}");
         sb.AppendLine($"스캔 라인 수: {summary.LinesScanned}");
         sb.AppendLine($"선택 결과 수: {hits.Count}");
         sb.AppendLine();
@@ -21,9 +22,16 @@ public sealed class ReportExporter
         sb.AppendLine(string.IsNullOrWhiteSpace(operatorNotes) ? "- 입력된 메모 없음." : operatorNotes.Trim());
         sb.AppendLine();
         sb.AppendLine("## 심각도별 집계");
-        foreach (var group in summary.Hits.GroupBy(h => h.Severity).OrderBy(g => g.Key))
-            sb.AppendLine($"- {group.Key}: {group.Count()}");
+        foreach (var item in summary.GetSeverityCounts())
+            sb.AppendLine($"- {item.Severity}: {item.Count}");
         sb.AppendLine();
+        if (summary.SkippedFiles.Count > 0)
+        {
+            sb.AppendLine("## 제외된 파일");
+            foreach (var skipped in summary.SkippedFiles.Take(100))
+                sb.AppendLine($"- {Path.GetFileName(skipped.FilePath)} — {skipped.Reason}");
+            sb.AppendLine();
+        }
         sb.AppendLine("## 선택한 증거");
         foreach (var hit in hits)
             sb.AppendLine($"- {hit.Severity} / {hit.RuleName} / {Path.GetFileName(hit.FilePath)}:{hit.LineNumber} — {hit.Preview}");

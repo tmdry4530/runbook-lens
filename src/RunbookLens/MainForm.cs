@@ -13,6 +13,7 @@ public sealed class MainForm : Form
     private readonly TextBox _notesBox = new();
     private readonly TextBox _searchBox = new();
     private readonly NumericUpDown _maxFiles = new();
+    private readonly NumericUpDown _maxFileMb = new();
     private readonly Label _status = new();
     private readonly DataGridView _grid = new();
     private readonly ListBox _checklist = new();
@@ -37,10 +38,11 @@ public sealed class MainForm : Form
         root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         Controls.Add(root);
 
-        var left = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 9, ColumnCount = 1 };
+        var left = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 10, ColumnCount = 1 };
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 130));
+        left.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 34));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute, 120));
@@ -69,6 +71,12 @@ public sealed class MainForm : Form
         _maxFiles.Dock = DockStyle.Fill;
         left.Controls.Add(Group("최대 파일 수", _maxFiles), 0, 4);
 
+        _maxFileMb.Minimum = 1;
+        _maxFileMb.Maximum = 2048;
+        _maxFileMb.Value = 25;
+        _maxFileMb.Dock = DockStyle.Fill;
+        left.Controls.Add(Group("파일당 최대 크기(MB)", _maxFileMb), 0, 5);
+
         _checklist.Items.AddRange(new object[]
         {
             "1. 심각/높음 신호 먼저 확인",
@@ -78,20 +86,20 @@ public sealed class MainForm : Form
             "5. 인수인계용 Markdown 내보내기"
         });
         _checklist.Dock = DockStyle.Fill;
-        left.Controls.Add(Group("점검 체크리스트", _checklist), 0, 5);
+        left.Controls.Add(Group("점검 체크리스트", _checklist), 0, 6);
 
         _notesBox.Multiline = true;
         _notesBox.ScrollBars = ScrollBars.Vertical;
         _notesBox.Dock = DockStyle.Fill;
         _notesBox.PlaceholderText = "운영 메모, 원인 가설, 다음 조치...";
-        left.Controls.Add(Group("사고/이슈 메모", _notesBox), 0, 6);
+        left.Controls.Add(Group("사고/이슈 메모", _notesBox), 0, 7);
 
         var export = new Button { Text = "점검 보고서 내보내기", Dock = DockStyle.Fill };
         export.Click += (_, _) => ExportBrief();
-        left.Controls.Add(export, 0, 7);
+        left.Controls.Add(export, 0, 8);
         _status.Text = "준비됨. 네트워크 전송 없음 · 시크릿 저장 없음 · 로컬 파일만 사용.";
         _status.Dock = DockStyle.Fill;
-        left.Controls.Add(_status, 0, 8);
+        left.Controls.Add(_status, 0, 9);
 
         var right = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, ColumnCount = 1 };
         right.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
@@ -184,9 +192,12 @@ public sealed class MainForm : Form
             _scanCancellation = new CancellationTokenSource();
             _status.Text = "스캔 중...";
             Cursor = Cursors.WaitCursor;
-            _lastSummary = await _scanner.ScanAsync(_pathBox.Text, rules, (int)_maxFiles.Value, _scanCancellation.Token);
+            var options = new ScanOptions((int)_maxFiles.Value, (long)_maxFileMb.Value * 1024 * 1024);
+            _lastSummary = await _scanner.ScanAsync(_pathBox.Text, rules, options, _scanCancellation.Token);
             ApplyFilter();
-            _status.Text = $"완료: {_lastSummary.FilesScanned}개 파일, {_lastSummary.LinesScanned}줄, {_lastSummary.Hits.Count}개 결과.";
+            var severitySummary = string.Join(" · ", _lastSummary.GetSeverityCounts().Select(item => $"{item.Severity} {item.Count}"));
+            if (string.IsNullOrWhiteSpace(severitySummary)) severitySummary = "결과 없음";
+            _status.Text = $"완료: {_lastSummary.FilesScanned}개 파일, {_lastSummary.LinesScanned}줄, {_lastSummary.Hits.Count}개 결과 · 제외 {_lastSummary.FilesSkipped}개 · {severitySummary}";
         }
         catch (OperationCanceledException)
         {

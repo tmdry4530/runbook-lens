@@ -1,9 +1,17 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunbookLens", "src\RunbookLens\RunbookLens.csproj", "{5C5D7A7C-41F9-4F45-A7F6-0AF7D84C0E11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1305B006-8F72-4DF1-8C87-0B80FC3BFDEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunbookLens.Tests", "tests\RunbookLens.Tests\RunbookLens.Tests.csproj", "{6680739A-0DAD-41AC-830A-933D15DB8853}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{69FFC7D0-F242-471D-A6C0-062A1023CC1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunbookLens.Core", "src\RunbookLens.Core\RunbookLens.Core.csproj", "{4CBA87C2-827C-497B-9607-3601B630F93C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +23,20 @@ Global
 		{5C5D7A7C-41F9-4F45-A7F6-0AF7D84C0E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C5D7A7C-41F9-4F45-A7F6-0AF7D84C0E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C5D7A7C-41F9-4F45-A7F6-0AF7D84C0E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6680739A-0DAD-41AC-830A-933D15DB8853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6680739A-0DAD-41AC-830A-933D15DB8853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6680739A-0DAD-41AC-830A-933D15DB8853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6680739A-0DAD-41AC-830A-933D15DB8853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBA87C2-827C-497B-9607-3601B630F93C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBA87C2-827C-497B-9607-3601B630F93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBA87C2-827C-497B-9607-3601B630F93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBA87C2-827C-497B-9607-3601B630F93C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6680739A-0DAD-41AC-830A-933D15DB8853} = {1305B006-8F72-4DF1-8C87-0B80FC3BFDEF}
+		{4CBA87C2-827C-497B-9607-3601B630F93C} = {69FFC7D0-F242-471D-A6C0-062A1023CC1C}
 	EndGlobalSection
 EndGlobal
