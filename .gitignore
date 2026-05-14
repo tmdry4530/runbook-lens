@@ -15,6 +15,7 @@ TestResults/
 # Logs and exported sessions
 *.log
 *.trace
+!samples/*.log
 runbook-lens-brief-*.md
 runbook-lens-session-*.json
 

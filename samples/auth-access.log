@@ -1,0 +1,10 @@
+2026-05-11 14:20:00 INFO identity service received login request user=demo-operator
+2026-05-11 14:20:03 WARN invalid token presented token=[redacted-demo-token] source=desktop-client
+2026-05-11 14:20:03 WARN unauthorized 401 route=/api/reports/export user=demo-operator
+2026-05-11 14:20:11 ERROR permission denied while opening local report folder path=C:\RunbookLens\Exports
+2026-05-11 14:21:02 WARN forbidden 403 route=/api/admin/rules user=demo-operator role=support
+2026-05-11 14:22:18 INFO password reset started user=demo-operator
+2026-05-11 14:23:44 ERROR failed to write session cache: cannot save profile snapshot
+2026-05-11 14:23:45 WARN out of space drive=C freeBytes=1048576 requiredBytes=52428800
+2026-05-11 14:24:10 ERROR timeout while refreshing group membership provider=local-adapter
+2026-05-11 14:25:31 INFO operator workaround="export with admin account after access review"

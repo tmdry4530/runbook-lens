@@ -127,23 +127,33 @@ artifacts/publish/win-x64-framework-dependent/RunbookLens.exe
 
 ## 샘플 로그 테스트 방법
 
-샘플 파일: `samples/demo.txt`
+샘플 폴더: `samples/`
+
+포함된 샘플:
+
+- `demo.txt`: 단일 파일 빠른 스모크 테스트
+- `checkout-incident.log`: 결제/주문 장애와 worker exception 흐름
+- `auth-access.log`: 인증/권한 실패와 로컬 저장 실패 흐름
+- `sync-worker.json`: JSON lines 형태의 batch sync/data corruption 흐름
+- `support-desk-export.md`: 지원 상담 export 안에 섞인 주문/환불 위험 신호
 
 샘플에는 다음 유형의 신호가 포함되어 있습니다.
 
-- 디스크 공간/쓰기 실패
-- 결제 실패
-- `NullReferenceException`
-- 인증 실패/401
+- 디스크 공간/쓰기 실패/out of space
+- 결제 실패, 주문 실패, 환불, chargeback
+- `NullReferenceException`, `InvalidOperationException`, stack trace
+- 인증 실패/401/403/permission denied/invalid token
+- timeout/deadline exceeded/slow query/latency
+- corrupt export/data safety risk
 
 UI에서 테스트:
 
 1. 앱 실행
 2. `로그 폴더/파일 선택` 클릭
-3. 단일 파일 선택으로 `samples/demo.txt` 선택
+3. 폴더 선택으로 `samples/` 선택하거나 단일 파일 선택으로 `samples/demo.txt` 선택
 4. 기본 규칙을 유지한 채 `로컬 스캔 시작` 클릭
 5. 결과 그리드에 심각/높음/중간 신호가 표시되는지 확인
-6. 검색창에 `payment`, `401`, `심각` 등을 입력해 필터 확인
+6. 검색창에 `payment`, `401`, `timeout`, `chargeback`, `심각` 등을 입력해 필터 확인
 7. Markdown 또는 JSON으로 내보내기 확인
 
 Core 테스트로 검증:
@@ -161,6 +171,10 @@ docs/
   DESIGN.md
 samples/
   demo.txt
+  checkout-incident.log
+  auth-access.log
+  sync-worker.json
+  support-desk-export.md
 scripts/
   verify-windows.ps1
 src/
@@ -186,7 +200,7 @@ tests/
 - `src/RunbookLens`: Windows Forms UI 및 사용자 흐름
 - `src/RunbookLens.Core`: 로그 스캔, 도메인 모델, 보고서 내보내기 로직
 - `tests/RunbookLens.Tests`: Core 로직 xUnit 테스트
-- `samples/demo.txt`: 수동 테스트용 샘플 로그
+- `samples/`: 수동 테스트용 샘플 로그 묶음 (`demo.txt`, 결제/권한/sync/support export 샘플 포함)
 - `scripts/verify-windows.ps1`: Windows 검증/publish 스크립트
 - `docs/DESIGN.md`: 제품/아키텍처 설계 메모
 

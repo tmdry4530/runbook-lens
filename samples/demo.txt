@@ -4,3 +4,9 @@
 2026-05-10 09:16:20 ERROR NullReferenceException at CheckoutController.Submit
 2026-05-10 09:17:40 WARN unauthorized 401 token expired
 2026-05-10 09:18:55 INFO operator acknowledged incident
+2026-05-10 09:19:12 WARN slow query duration=12844ms table=orders correlationId=demo-001
+2026-05-10 09:19:39 ERROR order failed id=ORD-8841 reason="inventory reservation timeout"
+2026-05-10 09:20:03 FATAL stack trace follows: System.InvalidOperationException: sequence contains no matching element
+2026-05-10 09:20:07 WARN forbidden 403 user=support-agent-2 route=/admin/refunds
+2026-05-10 09:21:18 ERROR cannot save incident brief: out of space on drive D:
+2026-05-10 09:22:44 INFO retry succeeded for invoice=INV-1007

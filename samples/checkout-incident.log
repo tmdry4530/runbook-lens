@@ -1,0 +1,14 @@
+2026-05-11 10:01:03 INFO api-gateway boot complete env=staging region=local
+2026-05-11 10:03:17 WARN latency upstream=orders-api p95=9200ms route=/checkout
+2026-05-11 10:03:25 ERROR timeout while calling payment-provider requestId=req-1729
+2026-05-11 10:03:26 ERROR payment failed invoice=INV-2026-0511-041 amount=129000 currency=KRW
+2026-05-11 10:03:42 ERROR order failed orderId=ORD-51041 step=payment-confirmation
+2026-05-11 10:04:10 WARN retry scheduled attempt=2 reason="deadline exceeded"
+2026-05-11 10:04:51 ERROR failed to write audit event: disk full path=C:\ops\audit\checkout-20260511.log
+2026-05-11 10:05:12 FATAL unhandled exception in queue worker
+2026-05-11 10:05:12 FATAL stack trace: System.NullReferenceException: Object reference not set to an instance of an object.
+2026-05-11 10:05:13 FATAL    at Checkout.Workers.PaymentCaptureJob.Execute(JobContext context)
+2026-05-11 10:05:14 INFO operator note="pause checkout promo until provider recovers"
+2026-05-11 10:08:59 WARN refund queue length=37 oldestAge=00:18:44
+2026-05-11 10:09:21 ERROR chargeback webhook failed status=500 providerEvent=evt_demo_chargeback_019
+2026-05-11 10:10:35 INFO incident owner assigned owner=oncall-demo

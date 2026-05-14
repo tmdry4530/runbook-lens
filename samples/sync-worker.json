@@ -1,0 +1,8 @@
+{"timestamp":"2026-05-12T08:00:01+09:00","level":"INFO","service":"sync-worker","message":"batch sync started","batchId":"batch-demo-0512"}
+{"timestamp":"2026-05-12T08:00:22+09:00","level":"WARN","service":"sync-worker","message":"slow query detected","latencyMs":17850,"table":"customer_orders"}
+{"timestamp":"2026-05-12T08:00:31+09:00","level":"ERROR","service":"sync-worker","message":"corrupt export detected while reading customer_orders.csv","file":"C:\\exports\\customer_orders.csv"}
+{"timestamp":"2026-05-12T08:01:04+09:00","level":"ERROR","service":"sync-worker","message":"failed to write reconciliation snapshot: out of space","drive":"E"}
+{"timestamp":"2026-05-12T08:02:16+09:00","level":"ERROR","service":"sync-worker","message":"InvalidOperationException during invoice merge","invoice":"INV-7782"}
+{"timestamp":"2026-05-12T08:02:17+09:00","level":"ERROR","service":"sync-worker","message":"stack trace: at Sync.Worker.InvoiceMerge.Apply(LocalRecord record)"}
+{"timestamp":"2026-05-12T08:04:50+09:00","level":"WARN","service":"sync-worker","message":"deadline exceeded while posting order status","order":"ORD-7782"}
+{"timestamp":"2026-05-12T08:05:12+09:00","level":"INFO","service":"sync-worker","message":"batch paused for manual review","batchId":"batch-demo-0512"}
